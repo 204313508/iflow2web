@@ -55,10 +55,16 @@ class IFlowSession:
                 # 使用绝对路径
                 abs_working_dir = os.path.abspath(self.working_dir)
 
-                # 检查工作目录是否存在
+                # 验证工作目录是否存在
                 if not os.path.exists(abs_working_dir):
-                    logger.warning(f"Working directory does not exist: {abs_working_dir}")
-                    # 不修改全局工作目录，让iFlow SDK自己处理
+                    error_msg = f"工作目录不存在: {abs_working_dir}"
+                    logger.error(error_msg)
+                    raise FileNotFoundError(error_msg)
+
+                if not os.path.isdir(abs_working_dir):
+                    error_msg = f"路径不是目录: {abs_working_dir}"
+                    logger.error(error_msg)
+                    raise NotADirectoryError(error_msg)
 
                 # 创建 iFlow 配置
                 # 注意：模型配置需要在 iFlow CLI 的配置文件中设置（~/.iflow/settings.json）
@@ -66,6 +72,7 @@ class IFlowSession:
                 options = IFlowOptions(
                     approval_mode=ApprovalMode[config.IFLOW_APPROVAL_MODE],
                     auto_start_process=True,  # 自动管理 iFlow 进程
+                    cwd=abs_working_dir,  # 设置工作目录
                     metadata={"model": self.model, "session_id": self.session_id}
                 )
 
