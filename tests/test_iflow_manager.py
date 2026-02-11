@@ -58,13 +58,15 @@ class TestIFlowSession:
         assert session.model is not None
 
     @pytest.mark.asyncio
+    @patch('iflow_manager.os.path.isdir')
     @patch('iflow_manager.os.path.exists')
     @patch('iflow_manager.os.path.abspath')
     @patch('iflow_manager.IFlowClient')
-    async def test_initialize(self, mock_client_class, mock_abspath, mock_exists):
+    async def test_initialize(self, mock_client_class, mock_abspath, mock_exists, mock_isdir):
         """测试初始化 iFlow 客户端"""
         mock_abspath.return_value = "F:\\test\\workspace"
         mock_exists.return_value = True
+        mock_isdir.return_value = True
         mock_client = AsyncMock()
         mock_client.__aenter__ = AsyncMock(return_value=mock_client)
         mock_client_class.return_value = mock_client
@@ -78,16 +80,18 @@ class TestIFlowSession:
 
         mock_abspath.assert_called_once_with("F:\\test\\workspace")
         mock_exists.assert_called_once()
+        mock_isdir.assert_called_once()
         mock_client_class.assert_called_once()
         assert session._client is not None
 
     @pytest.mark.asyncio
-    @patch('iflow_manager.os.chdir')
+    @patch('iflow_manager.os.path.isdir')
     @patch('iflow_manager.os.path.exists')
     @patch('iflow_manager.IFlowClient')
-    async def test_send_message(self, mock_client_class, mock_exists, mock_chdir):
+    async def test_send_message(self, mock_client_class, mock_exists, mock_isdir):
         """测试发送消息"""
         mock_exists.return_value = True
+        mock_isdir.return_value = True
         mock_client = AsyncMock()
         mock_client.__aenter__ = AsyncMock(return_value=mock_client)
         mock_client.send_message = AsyncMock()
