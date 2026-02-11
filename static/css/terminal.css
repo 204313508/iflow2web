@@ -1,0 +1,812 @@
+/* iflow2web 终端样式 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--terminal-font-family, 'Consolas, Monaco, "Courier New", monospace');
+    font-size: var(--terminal-font-size, 14px);
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+}
+
+/* 会话侧边栏 */
+.sidebar {
+    width: 280px;
+    background-color: #0d0d0d;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid #333;
+}
+
+.sidebar-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin: 0 0 12px 0;
+}
+
+.new-session-btn {
+    width: 100%;
+    background-color: #4ade80;
+    color: #0d0d0d;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.new-session-btn:hover {
+    background-color: #22c55e;
+}
+
+.sessions-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.session-item {
+    padding: 12px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.session-item:hover {
+    background-color: #1a1a1a;
+    border-color: #333;
+}
+
+.session-item.active {
+    background-color: #1a1a1a;
+    border-color: #4ade80;
+}
+
+.session-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #e0e0e0;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.session-info {
+    font-size: 11px;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.session-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.session-delete-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 6px;
+}
+
+.session-delete-btn:hover {
+    color: #ef4444;
+}
+
+/* 主内容区域 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 顶部状态栏 */
+.status-bar {
+    background-color: #0d0d0d;
+    color: #888;
+    padding: 8px 16px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.status-bar .connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ff4444;
+    transition: background-color 0.3s;
+}
+
+.status-indicator.connected {
+    background-color: #44ff44;
+}
+
+.status-indicator.connecting {
+    background-color: #ffaa00;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 终端内容区域 */
+.terminal-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background-color: #0d0d0d;
+    scroll-behavior: smooth;
+    min-height: 0;
+}
+
+.terminal-content {
+    line-height: 1.6;
+}
+
+/* 消息样式 */
+.message {
+    margin-bottom: 8px;
+    padding: 4px 0;
+    word-wrap: break-word;
+}
+
+.message.user {
+    color: #4ade80;
+}
+
+.message.user::before {
+    content: "> ";
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.message.assistant {
+    color: #e0e0e0;
+}
+
+.message.tool {
+    color: #f59e0b;
+    font-style: italic;
+}
+
+.message.tool::before {
+    content: "[";
+}
+
+.message.tool::after {
+    content: "]";
+}
+
+.message.plan {
+    color: #818cf8;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background-color: #1e1e3f;
+    border-left: 3px solid #818cf8;
+}
+
+.message.error {
+    color: #ef4444;
+}
+
+.message.error::before {
+    content: "ERROR: ";
+    font-weight: bold;
+}
+
+.message.finish {
+    color: #4ade80;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+}
+
+/* 输入区域 */
+.input-container {
+    background-color: #0d0d0d;
+    border-top: 1px solid #333;
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.input-container .prompt {
+    color: #4ade80;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+#message-input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    min-height: 20px;
+}
+
+#message-input::placeholder {
+    color: #666;
+}
+
+#send-button {
+    background-color: #4ade80;
+    color: #0d0d0d;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#send-button:hover {
+    background-color: #22c55e;
+}
+
+#send-button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+/* 滚动条样式 */
+.terminal-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-container::-webkit-scrollbar-track {
+    background: #0d0d0d;
+}
+
+.terminal-container::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+.terminal-container::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    /* 移动端侧边栏 - 抽屉式 */
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100%;
+        z-index: 100;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    /* 添加侧边栏切换按钮 */
+    .sidebar-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 50;
+        background-color: #4ade80;
+        border: none;
+        border-radius: 8px;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-toggle svg {
+        width: 24px;
+        height: 24px;
+        stroke: #0d0d0d;
+    }
+
+    .sidebar-toggle:active {
+        transform: scale(0.95);
+    }
+
+    /* 遮罩层 */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    /* 状态栏 */
+    .status-bar {
+        font-size: 12px;
+        padding: 12px 16px;
+        padding-left: 64px; /* 为侧边栏按钮留出空间 */
+    }
+
+    .status-bar .server-info {
+        display: none; /* 移动端隐藏部分信息 */
+    }
+
+    /* 终端容器 */
+    .terminal-container {
+        padding: 12px 16px;
+        padding-top: 70px; /* 为状态栏和侧边栏按钮留出空间 */
+    }
+
+    /* 输入区域 */
+    .input-container {
+        padding: 12px 16px;
+        padding-bottom: 24px; /* 底部安全区域 */
+        gap: 12px;
+    }
+
+    .input-container .prompt {
+        font-size: 16px;
+    }
+
+    #message-input {
+        font-size: 16px;
+        min-height: 44px;
+        padding: 10px 12px;
+    }
+
+    #send-button {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px;
+        min-width: 80px;
+    }
+
+    /* 模态框 */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 20px 0;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        font-size: 20px;
+        padding-bottom: 16px;
+    }
+
+    .modal-field label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .modal-field input,
+    .modal-field select {
+        font-size: 16px;
+        padding: 14px 16px;
+        min-height: 48px;
+        border-radius: 8px;
+    }
+
+    .modal-btn {
+        padding: 14px 24px;
+        font-size: 14px;
+        min-height: 48px;
+        min-width: 100px;
+    }
+
+    /* 会话列表 */
+    .session-item {
+        padding: 16px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+
+    .session-title {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .session-info {
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+
+    .session-delete-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-height: 32px;
+    }
+
+    /* 新建会话按钮 */
+    .new-session-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+        min-height: 48px;
+        border-radius: 8px;
+    }
+
+    /* 消息样式 */
+    .message {
+        margin-bottom: 12px;
+        padding: 8px 0;
+    }
+
+    .message-details {
+        font-size: 12px;
+        padding: 10px;
+        margin-left: 12px;
+    }
+
+    /* 欢迎消息 */
+    .welcome-message {
+        font-size: 14px;
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .welcome-message h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .welcome-message p {
+        margin-bottom: 6px;
+        line-height: 1.6;
+    }
+}
+
+/* 侧边栏切换按钮（默认隐藏） */
+.sidebar-toggle {
+    display: none;
+}
+
+/* 小型移动设备（iPhone SE等） */
+@media (max-width: 375px) {
+    .sidebar {
+        width: 260px;
+        left: -260px;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .status-bar {
+        font-size: 11px;
+        padding-left: 60px;
+    }
+
+    .terminal-container {
+        padding: 12px;
+        padding-top: 65px;
+    }
+
+    #message-input {
+        font-size: 16px;
+        padding: 10px 12px;
+    }
+
+    #send-button {
+        padding: 10px 16px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+}
+
+/* 新建会话模态框 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.modal-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-field {
+    margin-bottom: 16px;
+}
+
+.modal-field label {
+    display: block;
+    font-size: 13px;
+    color: #e0e0e0;
+    margin-bottom: 6px;
+}
+
+.modal-field input {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.modal-field input:focus {
+    outline: none;
+    border-color: #4ade80;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+}
+
+.modal-btn-primary {
+    background-color: #4ade80;
+    color: #0d0d0d;
+}
+
+.modal-btn-primary:hover {
+    background-color: #22c55e;
+}
+
+.modal-btn-secondary {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.modal-btn-secondary:hover {
+    background-color: #444;
+}
+
+/* 欢迎消息 */
+.welcome-message {
+    color: #888;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    border-left: 3px solid #888;
+}
+
+/* 初始化消息 */
+.init-message {
+    color: #4ade80;
+    margin-bottom: 16px;
+    padding: 16px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    border-left: 4px solid #4ade80;
+    text-align: center;
+    font-size: 14px;
+}
+
+.welcome-message h1 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+}
+
+.welcome-message p {
+    margin-bottom: 4px;
+}
+
+/* 切换开关样式 */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.toggle-switch input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+    background-color: #4ade80;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
+    transform: translateX(16px);
+}
+
+.toggle-label {
+    color: #888;
+}
+
+.toggle-switch input[type="checkbox"]:checked ~ .toggle-label {
+    color: #4ade80;
+}
+
+/* 详细信息样式 */
+.message-details {
+    display: block;
+    margin-left: 16px;
+    padding: 8px;
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.show-details .message-details {
+    display: block;
+}
+
+.message-detail-item {
+    margin-bottom: 4px;
+}
+
+.message-detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.message-detail-label {
+    color: #666;
+    margin-right: 4px;
+}
+
+/* 处理中指示器 */
+.processing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    border-left: 4px solid #4ade80;
+}
+
+.processing-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.processing-dots span {
+    width: 8px;
+    height: 8px;
+    background-color: #4ade80;
+    border-radius: 50%;
+    animation: processing-bounce 1.4s ease-in-out infinite both;
+}
+
+.processing-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.processing-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.processing-dots span:nth-child(3) {
+    animation-delay: 0s;
+}
+
+@keyframes processing-bounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.processing-text {
+    color: #4ade80;
+    font-size: 14px;
+    font-style: italic;
+}

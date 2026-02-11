@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Tools Web Interface</title>
+    <link rel="stylesheet" href="/static/css/terminal.css">
+    <style>
+        :root {
+            --terminal-font-family: {{ terminal_font_family }};
+            --terminal-font-size: {{ terminal_font_size }};
+        }
+    </style>
+</head>
+<body data-default-working-dir="{{ default_working_dir }}">
+    <!-- 移动端侧边栏切换按钮 -->
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- 侧边栏遮罩层 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 会话侧边栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>会话列表</h2>
+            <button id="new-session-btn" class="new-session-btn">+ 新建会话</button>
+        </div>
+        <div class="sessions-list">
+            <!-- 会话列表将在这里动态生成 -->
+        </div>
+    </aside>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 顶部状态栏 -->
+        <div class="status-bar">
+            <div class="connection-status">
+                <div class="status-indicator"></div>
+                <span id="connection-text">Connecting...</span>
+            </div>
+            <div class="server-info">
+                <span>CLI Tools Web Interface</span>
+            </div>
+        </div>
+
+        <!-- 终端内容区域 -->
+        <div class="terminal-container">
+            <div class="terminal-content">
+                <!-- 欢迎消息和消息内容将在这里动态生成 -->
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-container">
+            <span class="prompt">></span>
+            <input
+                type="text"
+                id="message-input"
+                placeholder="Type your message here..."
+                autocomplete="off"
+                disabled
+            />
+            <button id="send-button" disabled>Send</button>
+        </div>
+    </main>
+
+    <!-- 新建会话模态框 -->
+    <div id="session-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">新建会话</div>
+            <div class="modal-body">
+                <div class="modal-field">
+                    <label for="session-title">会话标题</label>
+                    <input
+                        type="text"
+                        id="session-title"
+                        placeholder="例如: My Project"
+                    />
+                </div>
+                <div class="modal-field">
+                    <label for="session-working-dir">工作目录</label>
+                    <input
+                        type="text"
+                        id="session-working-dir"
+                        placeholder="例如: F:\projects\my-project"
+                    />
+                </div>
+                <div class="modal-field">
+                    <label for="session-model">模型</label>
+                    <select id="session-model">
+                        <option value="" disabled selected>选择模型</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="modal-btn modal-btn-secondary">取消</button>
+                <button id="modal-create" class="modal-btn modal-btn-primary">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/terminal.js"></script>
+    <script>
+        // 更新连接状态文本
+        function updateConnectionText(status) {
+            const textElement = document.getElementById('connection-text');
+            switch (status) {
+                case 'connected':
+                    textElement.textContent = 'Connected';
+                    break;
+                case 'connecting':
+                    textElement.textContent = 'Connecting...';
+                    break;
+                case 'disconnected':
+                    textElement.textContent = 'Disconnected';
+                    break;
+            }
+        }
+
+        // 监听连接状态变化
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.target.classList.contains('status-indicator')) {
+                    if (mutation.target.classList.contains('connected')) {
+                        updateConnectionText('connected');
+                    } else if (mutation.target.classList.contains('connecting')) {
+                        updateConnectionText('connecting');
+                    } else {
+                        updateConnectionText('disconnected');
+                    }
+                }
+            });
+        });
+
+        // 开始观察连接状态指示器
+        document.addEventListener('DOMContentLoaded', () => {
+            const indicator = document.querySelector('.status-indicator');
+            observer.observe(indicator, { attributes: true, attributeFilter: ['class'] });
+        });
+    </script>
+</body>
+</html>
